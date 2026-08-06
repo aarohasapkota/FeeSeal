@@ -15,29 +15,33 @@ FeeSeal proves that the **published menu (A)**, the **physical menu photo (B)**,
 
 ## Your lane tonight (P0 UI)
 
-Build screens against **fixtures and typed contracts** first. Backend will match these shapes. Do not invent parallel data models.
+**You own all screens and UX.** Aaroha owns APIs, contracts, fixtures, and `src/lib/**`. A temporary publish wizard exists only so backend can be exercised — **replace it with your UI**; call the same endpoints and types.
 
-### Already live on `aaroha/backend` (do not rebuild)
+### Backend ready for you (Aaroha) — wire your UI to these
 
-Restaurant **photo → extract → paper template → publish** flow:
+Restaurant publish (photo → extract → choose paper layout → seal):
 
-- `/restaurant` and `/restaurant/publish` — capture, editable extract, template picker, preview, publish confirmation
-- Public paper menu at `/m/[id]` (try `/m/demo`)
-- Templates: `classic_single` | `bistro_two_column` | `evening_dense` in `src/components/menu-templates/`
-- APIs: `POST /api/menus/extract`, `POST /api/menus/publish` (real SHA-256 hash; Solana tx still stubbed)
-- Restyle templates if you want — do **not** invent a DoorDash-style card menu builder
+| Method | Path | Notes |
+|---|---|---|
+| `POST` | `/api/menus/extract` | multipart field `image` → `MenuExtractResult` |
+| `POST` | `/api/menus/publish` | body `CanonicalMenu` (include `templateId`) → real SHA-256 + stub Solana |
+| `GET` | `/api/restaurants/:id/menu` | public record; try `demo` |
 
-### Priority screens still open (demo order)
+- Types: `shared/contracts.ts` — `MenuTemplateId`, `MenuExtractResult`, `MenuPublishDraft`, `CanonicalMenu.templateId`, `PublishResult`
+- Fixtures: `fixtures/menu.v1.json`, `fixtures/menu.extract.from_photo.json`
+- Paper layout ids (not DoorDash cards): `classic_single` \| `bistro_two_column` \| `evening_dense`
+- Optional reuse: `src/components/menu-templates/` renders those layouts from `CanonicalMenu` — restyle or rebuild; keep printed-page look
+- Temporary reference only: `/restaurant/publish` — do not treat as final product UI
 
-1. **Landing** — two doors: diner / restaurant (shell exists)
-2. **Publish confirmation** — polish if needed (flow exists)
-3. **Public menu page** — QR placeholder / polish (paper templates exist)
+### Screens you should build (demo order)
+
+1. **Landing** — two doors: diner / restaurant
+2. **Restaurant publish** — photo capture, editable extract, template picker, preview, publish confirmation (hash + explorer link)
+3. **Public menu page** — verified badge, version, fee disclosure, QR placeholder; paper-style page not a delivery feed
 4. **Scan capture** — framing/glare guidance (menu, then receipt)
-5. **Review extraction** — image beside **editable** extracted fields (human confirms before compare)
-6. **Findings** — A / B / C columns, itemized diffs, at least one **passing** check, mark-explained stub, **visible disclaimer**
-7. **Verification** — upload original vs modified file → match / mismatch
-
-Optional if time: restaurant onboarding shell beyond photo publish.
+5. **Review extraction** — image beside **editable** extracted fields
+6. **Findings** — A / B / C columns, itemized diffs, one passing check, disclaimer
+7. **Verification** — original vs modified → match / mismatch
 
 ### Look (from PRD — stick to this)
 
