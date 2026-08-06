@@ -38,7 +38,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `POST` | `/api/scans/compare` |
 | `POST` | `/api/verify` |
 
-Restaurant UI: `/restaurant/publish` → public page `/m/[id]`.
+Restaurant UI is Diego’s. Backend publish APIs are ready; temporary `/restaurant/publish` is only for exercising them. Public API shape for menus: `/m/[id]` once UI lands (demo data via `GET /api/restaurants/demo/menu`).
 
 Real implementations land in `src/lib/{hash,solana,vision,compare}`. Hash is live; Solana still stubbed.
 
