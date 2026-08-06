@@ -26,8 +26,47 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgb(15 118 110 / 0.08), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgb(15 23 42 / 0.04), transparent 50%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
+}
+
+@keyframes feeseal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes feeseal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-rise {
+  animation: feeseal-rise 0.55s ease-out both;
+}
+
+.animate-fade {
+  animation: feeseal-fade 0.7s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: feeseal-rise 0.55s ease-out 0.12s both;
+}
+
+.animate-rise-delay-2 {
+  animation: feeseal-rise 0.55s ease-out 0.24s both;
 }
