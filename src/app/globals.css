@@ -35,9 +35,15 @@
     0 18px 40px rgb(15 23 42 / 0.12);
 }
 
+.menu-sheet-scroll {
+  overflow: visible;
+  height: auto;
+  min-height: min(70vh, 36rem);
+}
+
 .menu-item-row {
   display: grid;
-  grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+  grid-template-columns: minmax(0, auto) minmax(1rem, 1fr) auto;
   align-items: end;
   gap: 0.35rem;
 }
@@ -45,7 +51,7 @@
 .menu-item-dots {
   border-bottom: 1px dotted rgb(15 23 42 / 0.35);
   margin-bottom: 0.35rem;
-  min-width: 1rem;
+  min-width: 0.75rem;
 }
 
 .menu-viewer-stage {

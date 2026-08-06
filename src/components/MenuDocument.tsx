@@ -13,7 +13,11 @@ export type MenuPageModel = {
   showFooter: boolean;
 };
 
-export function buildMenuPages(menu: CanonicalMenu): MenuPageModel[] {
+export type MenuSheetLayout = "letter" | "scroll";
+
+export type MenuPageDensity = "desktop" | "tablet" | "phone";
+
+function sectionsFromMenu(menu: CanonicalMenu): MenuSection[] {
   const sectionOrder: string[] = [];
   const bySection = new Map<string, MenuItem[]>();
 
@@ -25,56 +29,95 @@ export function buildMenuPages(menu: CanonicalMenu): MenuPageModel[] {
     bySection.get(item.section)!.push(item);
   }
 
-  const allSections: MenuSection[] = sectionOrder.map((title) => ({
+  return sectionOrder.map((title) => ({
     title,
     items: bySection.get(title) ?? [],
   }));
+}
 
-  // Page 1: cocktails + starters (+ early mains if short)
-  // Page 2: remaining mains + dessert + disclosures
-  const page1Titles = new Set(["Cocktails", "Starters"]);
-  const page1 = allSections.filter((s) => page1Titles.has(s.title));
-  const page2 = allSections.filter((s) => !page1Titles.has(s.title));
-
-  // Fallback if sections don't match expected names
-  if (page1.length === 0 || page2.length === 0) {
-    const mid = Math.ceil(allSections.length / 2);
+function finalizePages(
+  chunks: MenuSection[][],
+  menu: CanonicalMenu,
+): MenuPageModel[] {
+  if (chunks.length === 0) {
     return [
       {
-        sections: allSections.slice(0, mid),
+        sections: [],
         showMasthead: true,
-        showDisclosures: false,
-        showFooter: false,
-      },
-      {
-        sections: allSections.slice(mid),
-        showMasthead: false,
         showDisclosures: true,
         showFooter: true,
       },
     ];
   }
 
-  return [
-    {
-      sections: page1,
-      showMasthead: true,
-      showDisclosures: false,
-      showFooter: false,
-    },
-    {
-      sections: page2,
-      showMasthead: false,
-      showDisclosures: true,
-      showFooter: true,
-    },
-  ];
+  return chunks.map((sections, index) => {
+    const isFirst = index === 0;
+    const isLast = index === chunks.length - 1;
+    return {
+      sections,
+      showMasthead: isFirst,
+      showDisclosures:
+        isLast &&
+        (menu.feeDisclosures.length > 0 || Boolean(menu.prixFixeNote)),
+      showFooter: isLast,
+    };
+  });
+}
+
+/**
+ * Pack sections into pages. Never splits a section across pages.
+ * Density controls how many items fit before starting a new sheet.
+ */
+export function buildMenuPages(
+  menu: CanonicalMenu,
+  density: MenuPageDensity = "desktop",
+): MenuPageModel[] {
+  const allSections = sectionsFromMenu(menu);
+
+  if (density === "desktop") {
+    const page1Titles = new Set(["Cocktails", "Starters"]);
+    const page1 = allSections.filter((s) => page1Titles.has(s.title));
+    const page2 = allSections.filter((s) => !page1Titles.has(s.title));
+
+    if (page1.length > 0 && page2.length > 0) {
+      return finalizePages([page1, page2], menu);
+    }
+
+    const mid = Math.ceil(allSections.length / 2);
+    return finalizePages(
+      [allSections.slice(0, mid), allSections.slice(mid)],
+      menu,
+    );
+  }
+
+  const maxItems = density === "phone" ? 6 : 10;
+  const chunks: MenuSection[][] = [];
+  let current: MenuSection[] = [];
+  let count = 0;
+
+  for (const section of allSections) {
+    const sectionSize = Math.max(section.items.length, 1);
+    const wouldExceed =
+      current.length > 0 && count + sectionSize > maxItems;
+
+    if (wouldExceed) {
+      chunks.push(current);
+      current = [];
+      count = 0;
+    }
+
+    current.push(section);
+    count += sectionSize;
+  }
+
+  if (current.length > 0) chunks.push(current);
+  return finalizePages(chunks, menu);
 }
 
 function DietaryNote({ tags }: { tags?: MenuItem["dietaryTags"] }) {
   if (!tags?.length) return null;
   return (
-    <p className="mt-0.5 text-[0.7rem] italic tracking-wide text-ink/45">
+    <p className="mt-0.5 text-[0.7rem] italic tracking-wide text-ink/45 sm:text-[0.72rem]">
       {tags.map((t) => t.replaceAll("_", " ")).join(" · ")}
     </p>
   );
@@ -82,11 +125,13 @@ function DietaryNote({ tags }: { tags?: MenuItem["dietaryTags"] }) {
 
 function MenuItemLine({ item }: { item: MenuItem }) {
   return (
-    <li className="py-1.5">
+    <li className="py-2 sm:py-1.5">
       <div className="menu-item-row">
-        <span className="text-[0.95rem] leading-snug text-ink">{item.name}</span>
+        <span className="min-w-0 break-words text-[1rem] leading-snug text-ink sm:text-[0.95rem]">
+          {item.name}
+        </span>
         <span className="menu-item-dots" aria-hidden />
-        <span className="font-mono text-[0.9rem] tabular-nums text-ink">
+        <span className="shrink-0 font-mono text-[0.95rem] tabular-nums text-ink sm:text-[0.9rem]">
           {formatCents(item.priceCents)}
         </span>
       </div>
@@ -103,20 +148,22 @@ function Disclosures({
   prixFixeNote?: string;
 }) {
   return (
-    <div className="mt-auto border-t border-ink/15 pt-5">
+    <div className="mt-8 border-t border-ink/15 pt-5 sm:mt-auto">
       <p className="text-center text-[0.7rem] font-bold uppercase tracking-[0.18em] text-ink/55">
         Notices
       </p>
-      <ul className="mt-3 space-y-2 text-center text-[0.78rem] leading-relaxed text-ink/70">
+      <ul className="mt-3 space-y-2.5 text-center text-[0.85rem] leading-relaxed text-ink/70 sm:text-[0.78rem]">
         {disclosures.map((fee, i) => (
-          <li key={`${fee.kind}-${i}`}>
+          <li key={`${fee.kind}-${i}`} className="break-words px-1">
             <span className="capitalize">{formatFeeKind(fee.kind)}</span>
             {" · "}
             {fee.amountOrRate}
             {fee.purpose ? ` — ${fee.purpose}` : null}
           </li>
         ))}
-        {prixFixeNote ? <li className="italic">{prixFixeNote}</li> : null}
+        {prixFixeNote ? (
+          <li className="break-words px-1 italic">{prixFixeNote}</li>
+        ) : null}
       </ul>
     </div>
   );
@@ -130,6 +177,7 @@ export function MenuSheet({
   verified,
   version,
   updatedLabel,
+  layout = "letter",
 }: {
   menu: CanonicalMenu;
   page: MenuPageModel;
@@ -138,18 +186,25 @@ export function MenuSheet({
   verified: boolean;
   version: number;
   updatedLabel: string;
+  layout?: MenuSheetLayout;
 }) {
+  const isScroll = layout === "scroll";
+
   return (
     <article
-      className="menu-sheet relative flex h-full w-full flex-col overflow-hidden px-[8%] py-[7%]"
+      className={
+        isScroll
+          ? "menu-sheet menu-sheet-scroll relative flex w-full flex-col px-5 py-6 sm:px-7 sm:py-8"
+          : "menu-sheet relative flex h-full w-full flex-col overflow-hidden px-[8%] py-[7%]"
+      }
       aria-label={`${menu.restaurantName} menu page ${pageNumber}`}
     >
       {page.showMasthead ? (
-        <header className="mb-7 text-center">
+        <header className="mb-6 text-center sm:mb-7">
           <p className="font-sans text-[0.65rem] font-medium uppercase tracking-[0.28em] text-accent">
             {verified ? "FeeSeal verified" : "FeeSeal"}
           </p>
-          <h1 className="mt-3 text-[2rem] font-bold tracking-tight text-ink sm:text-[2.35rem]">
+          <h1 className="mt-3 break-words text-[1.75rem] font-bold tracking-tight text-ink sm:text-[2.35rem]">
             {menu.restaurantName}
           </h1>
           <div className="mx-auto mt-3 h-px w-16 bg-accent/70" />
@@ -161,17 +216,23 @@ export function MenuSheet({
           </p>
         </header>
       ) : (
-        <header className="mb-6 flex items-baseline justify-between border-b border-ink/10 pb-3">
-          <p className="text-sm font-bold tracking-wide text-ink">
+        <header className="mb-5 flex items-baseline justify-between gap-3 border-b border-ink/10 pb-3 sm:mb-6">
+          <p className="min-w-0 break-words text-sm font-bold tracking-wide text-ink">
             {menu.restaurantName}
           </p>
-          <p className="font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink/40">
+          <p className="shrink-0 font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink/40">
             Continued
           </p>
         </header>
       )}
 
-      <div className="flex flex-1 flex-col gap-7">
+      <div
+        className={
+          isScroll
+            ? "flex flex-col gap-6 sm:gap-7"
+            : "flex min-h-0 flex-1 flex-col gap-7"
+        }
+      >
         {page.sections.map((section) => (
           <section key={section.title}>
             <h2 className="mb-3 text-center text-[0.78rem] font-bold uppercase tracking-[0.22em] text-accent">
@@ -194,8 +255,8 @@ export function MenuSheet({
       </div>
 
       {page.showFooter ? (
-        <footer className="mt-6 flex items-end justify-between gap-4 border-t border-ink/10 pt-4">
-          <div className="flex items-center gap-3">
+        <footer className="mt-8 flex items-end justify-between gap-4 border-t border-ink/10 pt-4 sm:mt-6">
+          <div className="flex min-w-0 items-end gap-3">
             <div
               className="flex h-14 w-14 shrink-0 items-center justify-center border border-ink/20"
               aria-hidden
@@ -209,11 +270,11 @@ export function MenuSheet({
                 ))}
               </div>
             </div>
-            <p className="max-w-[10rem] font-sans text-[0.65rem] leading-snug text-ink/50">
+            <p className="min-w-0 font-sans text-[0.7rem] leading-snug text-ink/50 sm:max-w-[10rem] sm:text-[0.65rem]">
               Scan for the sealed digital record of this menu.
             </p>
           </div>
-          <p className="font-sans text-[0.65rem] tabular-nums text-ink/40">
+          <p className="shrink-0 font-sans text-[0.65rem] tabular-nums text-ink/40">
             {pageNumber} / {totalPages}
           </p>
         </footer>
