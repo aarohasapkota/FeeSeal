@@ -29,8 +29,9 @@ export default function HomePage() {
         </Link>
       </div>
       <p className="mt-8 max-w-md text-center text-xs text-ink/50">
-        API fixtures are live under <code className="font-mono">/api/*</code>.
-        UI screens are Diego&apos;s lane.
+        Restaurants: photograph a menu at{" "}
+        <code className="font-mono">/restaurant/publish</code>. Demo public
+        page: <code className="font-mono">/m/demo</code>.
       </p>
     </main>
   );

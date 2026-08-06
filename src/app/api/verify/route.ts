@@ -1,9 +1,14 @@
-import publish from "@fixtures/publish.confirmed.json";
-import type { VerifyResult } from "@shared/contracts";
+import menuFixture from "@fixtures/menu.v1.json";
+import type { CanonicalMenu, VerifyResult } from "@shared/contracts";
+import { hashCanonicalMenu } from "@/lib/hash";
+import { getPublishedMenu } from "@/lib/menu-store";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const contentType = request.headers.get("content-type") ?? "";
   let actualHash: string | undefined;
+  let restaurantId: string | undefined;
   let expectMatch = true;
 
   if (contentType.includes("multipart/form-data")) {
@@ -14,20 +19,27 @@ export async function POST(request: Request) {
     if (typeof hashField === "string" && hashField.length > 0) {
       actualHash = hashField;
     }
+    const idField = form.get("restaurantId");
+    if (typeof idField === "string") restaurantId = idField;
   } else {
     try {
       const json = (await request.json()) as {
         hash?: string;
         tampered?: boolean;
+        restaurantId?: string;
       };
       actualHash = json.hash;
       expectMatch = json.tampered !== true;
+      restaurantId = json.restaurantId;
     } catch {
       return Response.json({ error: "Invalid body" }, { status: 400 });
     }
   }
 
-  const expectedHash = publish.menuHash;
+  const stored = restaurantId ? getPublishedMenu(restaurantId) : undefined;
+  const expectedHash =
+    stored?.menuHash ?? hashCanonicalMenu(menuFixture as CanonicalMenu);
+
   const resolvedActual =
     actualHash ??
     (expectMatch

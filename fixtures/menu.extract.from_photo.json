@@ -1,49 +1,40 @@
 {
-  "restaurantId": "rst_miami_coral",
-  "restaurantName": "Coral & Key",
-  "version": 1,
-  "effectiveFrom": "2026-08-01T12:00:00.000Z",
-  "jurisdiction": "US-FL",
-  "currency": "USD",
-  "templateId": "classic_single",
+  "restaurantNameGuess": "Coral & Key",
+  "source": "fixture",
   "items": [
     {
-      "id": "itm_mojito",
       "section": "Cocktails",
       "name": "Classic Mojito",
       "priceCents": 1400,
       "description": "Rum, mint, lime, soda",
-      "dietaryTags": ["vegetarian"]
+      "confidence": 0.92
     },
     {
-      "id": "itm_ceviche",
       "section": "Starters",
       "name": "Snapper Ceviche",
       "priceCents": 1800,
       "description": "Citrus, avocado, chile",
-      "dietaryTags": ["gluten_free"]
+      "confidence": 0.9
     },
     {
-      "id": "itm_burger",
       "section": "Mains",
       "name": "Coral Burger",
       "priceCents": 2200,
-      "description": "Brioche, pickles, house sauce"
+      "description": "Brioche, pickles, house sauce",
+      "confidence": 0.88
     },
     {
-      "id": "itm_grouper",
       "section": "Mains",
       "name": "Grilled Grouper",
       "priceCents": 3200,
       "description": "Seasonal vegetables",
-      "dietaryTags": ["gluten_free"]
+      "confidence": 0.91
     },
     {
-      "id": "itm_flan",
       "section": "Dessert",
       "name": "Cuban Flan",
       "priceCents": 1100,
-      "dietaryTags": ["vegetarian"]
+      "confidence": 0.89
     }
   ],
   "feeDisclosures": [

@@ -17,17 +17,27 @@ FeeSeal proves that the **published menu (A)**, the **physical menu photo (B)**,
 
 Build screens against **fixtures and typed contracts** first. Backend will match these shapes. Do not invent parallel data models.
 
-### Priority screens (demo order)
+### Already live on `aaroha/backend` (do not rebuild)
 
-1. **Landing** — two doors: diner / restaurant  
-2. **Publish confirmation** — canonical JSON preview, hash, version, tx status, Solana explorer link  
-3. **Public menu page** — verified badge, version, last updated, fee disclosure block, QR placeholder  
-4. **Scan capture** — framing/glare guidance (menu, then receipt)  
-5. **Review extraction** — image beside **editable** extracted fields (human confirms before compare)  
-6. **Findings** — A / B / C columns, itemized diffs, at least one **passing** check, mark-explained stub, **visible disclaimer**  
-7. **Verification** — upload original vs modified file → match / mismatch  
+Restaurant **photo → extract → paper template → publish** flow:
 
-Optional if time: restaurant onboarding shell, menu builder shell (can be fixture-driven).
+- `/restaurant` and `/restaurant/publish` — capture, editable extract, template picker, preview, publish confirmation
+- Public paper menu at `/m/[id]` (try `/m/demo`)
+- Templates: `classic_single` | `bistro_two_column` | `evening_dense` in `src/components/menu-templates/`
+- APIs: `POST /api/menus/extract`, `POST /api/menus/publish` (real SHA-256 hash; Solana tx still stubbed)
+- Restyle templates if you want — do **not** invent a DoorDash-style card menu builder
+
+### Priority screens still open (demo order)
+
+1. **Landing** — two doors: diner / restaurant (shell exists)
+2. **Publish confirmation** — polish if needed (flow exists)
+3. **Public menu page** — QR placeholder / polish (paper templates exist)
+4. **Scan capture** — framing/glare guidance (menu, then receipt)
+5. **Review extraction** — image beside **editable** extracted fields (human confirms before compare)
+6. **Findings** — A / B / C columns, itemized diffs, at least one **passing** check, mark-explained stub, **visible disclaimer**
+7. **Verification** — upload original vs modified file → match / mismatch
+
+Optional if time: restaurant onboarding shell beyond photo publish.
 
 ### Look (from PRD — stick to this)
 

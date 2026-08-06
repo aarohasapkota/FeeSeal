@@ -27,11 +27,24 @@ export type FeeDisclosure = {
   purpose: string;
 };
 
+/** Printed-menu layout (not delivery-app card UI). */
+export type MenuTemplateId =
+  | "classic_single"
+  | "bistro_two_column"
+  | "evening_dense";
+
+export const MENU_TEMPLATE_IDS: MenuTemplateId[] = [
+  "classic_single",
+  "bistro_two_column",
+  "evening_dense",
+];
+
 export type MenuItem = {
   id: string;
   section: string;
   name: string;
   priceCents: number;
+  description?: string;
   dietaryTags?: DietaryTag[];
 };
 
@@ -45,8 +58,33 @@ export type CanonicalMenu = {
   currency: "USD";
   items: MenuItem[];
   feeDisclosures: FeeDisclosure[];
+  templateId: MenuTemplateId;
   /** carve-out — flag excluded, not discrepancy */
   prixFixeNote?: string;
+};
+
+/** Editable post-extract state before seal. */
+export type MenuPublishDraft = {
+  restaurantName: string;
+  items: MenuItem[];
+  feeDisclosures: FeeDisclosure[];
+  templateId: MenuTemplateId;
+  prixFixeNote?: string;
+};
+
+export type MenuExtractItem = {
+  section: string;
+  name: string;
+  priceCents: number;
+  description?: string;
+  confidence?: number;
+};
+
+export type MenuExtractResult = {
+  restaurantNameGuess?: string;
+  items: MenuExtractItem[];
+  feeDisclosures: FeeDisclosure[];
+  source: "vision" | "fixture";
 };
 
 export type PublishResult = {
@@ -55,6 +93,8 @@ export type PublishResult = {
   signature: string;
   explorerUrl: string;
   status: "confirmed" | "pending" | "failed";
+  restaurantId: string;
+  publicPath: string;
 };
 
 export type ExtractedLine = {
@@ -121,6 +161,7 @@ export type PublicMenuResponse = {
   menuHash: string;
   verified: boolean;
   lastUpdated: string;
+  templateId: MenuTemplateId;
   signature?: string;
   explorerUrl?: string;
 };

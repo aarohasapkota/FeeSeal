@@ -31,3 +31,17 @@ body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
 }
+
+.font-menu {
+  font-family: var(--font-menu), ui-serif, Georgia, serif;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .menu-paper {
+    box-shadow: none !important;
+    max-width: none !important;
+  }
+}

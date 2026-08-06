@@ -27,17 +27,20 @@ Open [http://localhost:3000](http://localhost:3000).
 - `shared/contracts.ts` — typed API shapes
 - `fixtures/` — demo menu, extractions, findings, publish confirmation
 
-## API (fixture-backed tonight)
+## API (fixture-backed / partial real)
 
 | Method | Path |
 |---|---|
-| `GET` | `/api/restaurants/:id/menu` (`demo` or `rst_miami_coral`) |
-| `POST` | `/api/menus/publish` |
+| `GET` | `/api/restaurants/:id/menu` (`demo`, `rst_miami_coral`, or published id) |
+| `POST` | `/api/menus/extract` (multipart `image`) |
+| `POST` | `/api/menus/publish` (real hash; Solana stub) |
 | `POST` | `/api/scans/extract` |
 | `POST` | `/api/scans/compare` |
 | `POST` | `/api/verify` |
 
-Real implementations land in `src/lib/{hash,solana,vision,compare}`.
+Restaurant UI: `/restaurant/publish` → public page `/m/[id]`.
+
+Real implementations land in `src/lib/{hash,solana,vision,compare}`. Hash is live; Solana still stubbed.
 
 ## Env
 
