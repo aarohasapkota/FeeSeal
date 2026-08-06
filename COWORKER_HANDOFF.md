@@ -2,7 +2,8 @@
 
 **Split:** Diego → UI · Aaroha → backend  
 **Branches:** you use `diego/ui` (or similar) · Aaroha uses `aaroha/backend`  
-**Base:** both branch from `main`. Do not commit shared contracts on the wrong branch without syncing.
+**Base:** both branch from `main`. Do not commit shared contracts on the wrong branch without syncing.  
+**Style:** follow [CODING_STANDARDS.md](./CODING_STANDARDS.md) (Doug Lea–style rules adapted for TypeScript / Next.js / React).
 
 ---
 

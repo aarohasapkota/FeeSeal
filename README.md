@@ -11,7 +11,7 @@ Digital menu platform: restaurants publish prices and fee disclosures; FeeSeal s
 | Aaroha | `aaroha/backend` | API, hash, Solana, vision, compare |
 | Diego | `diego/ui` | Screens, components, design |
 
-See [COWORKER_HANDOFF.md](./COWORKER_HANDOFF.md) and [prd.md](./prd.md).
+See [COWORKER_HANDOFF.md](./COWORKER_HANDOFF.md), [prd.md](./prd.md), and [CODING_STANDARDS.md](./CODING_STANDARDS.md).
 
 ## Quick start
 
