@@ -23,6 +23,35 @@
   --color-difference: var(--difference);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-menu: var(--font-menu-serif);
+}
+
+.menu-sheet {
+  font-family: var(--font-menu-serif), "Times New Roman", Times, serif;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  box-shadow:
+    0 1px 0 rgb(15 23 42 / 0.04),
+    0 18px 40px rgb(15 23 42 / 0.12);
+}
+
+.menu-item-row {
+  display: grid;
+  grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+  align-items: end;
+  gap: 0.35rem;
+}
+
+.menu-item-dots {
+  border-bottom: 1px dotted rgb(15 23 42 / 0.35);
+  margin-bottom: 0.35rem;
+  min-width: 1rem;
+}
+
+.menu-viewer-stage {
+  background:
+    radial-gradient(ellipse at center, rgb(15 23 42 / 0.04), transparent 65%),
+    linear-gradient(180deg, #e8eef3 0%, #d9e2ea 100%);
 }
 
 body {

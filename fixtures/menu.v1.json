@@ -14,11 +14,50 @@
       "dietaryTags": ["vegetarian"]
     },
     {
+      "id": "itm_paloma",
+      "section": "Cocktails",
+      "name": "Key Lime Paloma",
+      "priceCents": 1500,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
+      "id": "itm_old_cuban",
+      "section": "Cocktails",
+      "name": "Old Cuban",
+      "priceCents": 1600
+    },
+    {
+      "id": "itm_espresso_martini",
+      "section": "Cocktails",
+      "name": "Espresso Martini",
+      "priceCents": 1500,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
       "id": "itm_ceviche",
       "section": "Starters",
       "name": "Snapper Ceviche",
       "priceCents": 1800,
       "dietaryTags": ["gluten_free"]
+    },
+    {
+      "id": "itm_conch",
+      "section": "Starters",
+      "name": "Conch Fritters",
+      "priceCents": 1600
+    },
+    {
+      "id": "itm_croquetas",
+      "section": "Starters",
+      "name": "Ham Croquetas",
+      "priceCents": 1400
+    },
+    {
+      "id": "itm_salad",
+      "section": "Starters",
+      "name": "Hearts of Palm Salad",
+      "priceCents": 1500,
+      "dietaryTags": ["vegan", "gluten_free"]
     },
     {
       "id": "itm_burger",
@@ -34,10 +73,57 @@
       "dietaryTags": ["gluten_free"]
     },
     {
+      "id": "itm_ropa",
+      "section": "Mains",
+      "name": "Ropa Vieja",
+      "priceCents": 2800
+    },
+    {
+      "id": "itm_lobster",
+      "section": "Mains",
+      "name": "Spiny Lobster Tail",
+      "priceCents": 4200,
+      "dietaryTags": ["gluten_free"]
+    },
+    {
+      "id": "itm_rice",
+      "section": "Mains",
+      "name": "Seafood Rice",
+      "priceCents": 3000
+    },
+    {
+      "id": "itm_steak",
+      "section": "Mains",
+      "name": "Chimichurri Skirt Steak",
+      "priceCents": 3600,
+      "dietaryTags": ["gluten_free"]
+    },
+    {
       "id": "itm_flan",
       "section": "Dessert",
       "name": "Cuban Flan",
       "priceCents": 1100,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
+      "id": "itm_tres_leches",
+      "section": "Dessert",
+      "name": "Tres Leches",
+      "priceCents": 1200,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
+      "id": "itm_key_lime",
+      "section": "Dessert",
+      "name": "Key Lime Tart",
+      "priceCents": 1200,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
+      "id": "itm_guava",
+      "section": "Dessert",
+      "name": "Guava Pastry",
+      "priceCents": 1000,
       "dietaryTags": ["vegetarian"]
     }
   ],
@@ -47,5 +133,6 @@
       "amountOrRate": "3%",
       "purpose": "Kitchen and hospitality operations"
     }
-  ]
+  ],
+  "prixFixeNote": "Prix fixe tasting menu available Friday–Saturday; excluded from printed à la carte comparison."
 }
