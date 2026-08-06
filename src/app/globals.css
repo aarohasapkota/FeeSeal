@@ -38,7 +38,7 @@
 .menu-sheet-scroll {
   overflow: visible;
   height: auto;
-  min-height: min(70vh, 36rem);
+  min-height: 0;
 }
 
 .menu-item-row {

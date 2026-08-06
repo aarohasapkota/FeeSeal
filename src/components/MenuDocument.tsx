@@ -65,8 +65,9 @@ function finalizePages(
 }
 
 /**
- * Pack sections into pages. Never splits a section across pages.
- * Density controls how many items fit before starting a new sheet.
+ * Pack sections into pages.
+ * - desktop: two letter pages
+ * - phone/tablet: one continuous sheet (no page breaks)
  */
 export function buildMenuPages(
   menu: CanonicalMenu,
@@ -74,44 +75,23 @@ export function buildMenuPages(
 ): MenuPageModel[] {
   const allSections = sectionsFromMenu(menu);
 
-  if (density === "desktop") {
-    const page1Titles = new Set(["Cocktails", "Starters"]);
-    const page1 = allSections.filter((s) => page1Titles.has(s.title));
-    const page2 = allSections.filter((s) => !page1Titles.has(s.title));
-
-    if (page1.length > 0 && page2.length > 0) {
-      return finalizePages([page1, page2], menu);
-    }
-
-    const mid = Math.ceil(allSections.length / 2);
-    return finalizePages(
-      [allSections.slice(0, mid), allSections.slice(mid)],
-      menu,
-    );
+  if (density !== "desktop") {
+    return finalizePages([allSections], menu);
   }
 
-  const maxItems = density === "phone" ? 6 : 10;
-  const chunks: MenuSection[][] = [];
-  let current: MenuSection[] = [];
-  let count = 0;
+  const page1Titles = new Set(["Cocktails", "Starters"]);
+  const page1 = allSections.filter((s) => page1Titles.has(s.title));
+  const page2 = allSections.filter((s) => !page1Titles.has(s.title));
 
-  for (const section of allSections) {
-    const sectionSize = Math.max(section.items.length, 1);
-    const wouldExceed =
-      current.length > 0 && count + sectionSize > maxItems;
-
-    if (wouldExceed) {
-      chunks.push(current);
-      current = [];
-      count = 0;
-    }
-
-    current.push(section);
-    count += sectionSize;
+  if (page1.length > 0 && page2.length > 0) {
+    return finalizePages([page1, page2], menu);
   }
 
-  if (current.length > 0) chunks.push(current);
-  return finalizePages(chunks, menu);
+  const mid = Math.ceil(allSections.length / 2);
+  return finalizePages(
+    [allSections.slice(0, mid), allSections.slice(mid)],
+    menu,
+  );
 }
 
 function DietaryNote({ tags }: { tags?: MenuItem["dietaryTags"] }) {
@@ -274,15 +254,17 @@ export function MenuSheet({
               Scan for the sealed digital record of this menu.
             </p>
           </div>
-          <p className="shrink-0 font-sans text-[0.65rem] tabular-nums text-ink/40">
-            {pageNumber} / {totalPages}
-          </p>
+          {!isScroll && totalPages > 1 ? (
+            <p className="shrink-0 font-sans text-[0.65rem] tabular-nums text-ink/40">
+              {pageNumber} / {totalPages}
+            </p>
+          ) : null}
         </footer>
-      ) : (
+      ) : !isScroll && totalPages > 1 ? (
         <p className="mt-6 text-right font-sans text-[0.65rem] tabular-nums text-ink/35">
           {pageNumber} / {totalPages}
         </p>
-      )}
+      ) : null}
     </article>
   );
 }

@@ -68,12 +68,9 @@ export function MenuViewer({ menu, verified, updatedLabel }: MenuViewerProps) {
   }, [zoomIn, zoomOut]);
 
   const isDesktop = density === "desktop";
-  const pageHint =
-    density === "phone"
-      ? `${pages.length} sheets · scroll to read full menu`
-      : density === "tablet"
-        ? `${pages.length} sheets · scroll — no cutoffs`
-        : "Printed menu view · scroll to pan · ⌘/Ctrl + scroll to zoom";
+  const pageHint = isDesktop
+    ? "Printed menu view · scroll to pan · ⌘/Ctrl + scroll to zoom"
+    : "Scroll for the full menu";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -145,29 +142,26 @@ export function MenuViewer({ menu, verified, updatedLabel }: MenuViewerProps) {
           </div>
         </div>
       ) : (
-        /* Phone / tablet: fluid sheets sized to content — never clipped */
-        <div className="menu-viewer-stage flex flex-1 flex-col gap-5 px-3 py-4 pb-10 sm:px-5 sm:py-6">
-          {pages.map((page, index) => (
-            <div
-              key={`scroll-${density}-${index}`}
-              className={
-                density === "phone"
-                  ? "mx-auto w-full max-w-[22.5rem]"
-                  : "mx-auto w-full max-w-[34rem]"
-              }
-            >
-              <MenuSheet
-                menu={menu}
-                page={page}
-                pageNumber={index + 1}
-                totalPages={pages.length}
-                verified={verified}
-                version={menu.version}
-                updatedLabel={updatedLabel}
-                layout="scroll"
-              />
-            </div>
-          ))}
+        /* Phone / tablet: one continuous scroll menu — no page breaks */
+        <div className="menu-viewer-stage flex flex-1 flex-col px-3 py-4 pb-10 sm:px-5 sm:py-6">
+          <div
+            className={
+              density === "phone"
+                ? "mx-auto w-full max-w-[22.5rem]"
+                : "mx-auto w-full max-w-[34rem]"
+            }
+          >
+            <MenuSheet
+              menu={menu}
+              page={pages[0]!}
+              pageNumber={1}
+              totalPages={1}
+              verified={verified}
+              version={menu.version}
+              updatedLabel={updatedLabel}
+              layout="scroll"
+            />
+          </div>
         </div>
       )}
     </div>
