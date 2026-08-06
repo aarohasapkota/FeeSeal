@@ -1,0 +1,44 @@
+{
+  "findings": [
+    {
+      "id": "fnd_ab_burger",
+      "comparison": "A_vs_B",
+      "severity": "difference",
+      "title": "Potential price difference on printed menu",
+      "detail": "Published Coral Burger is $22.00; physical menu shows $19.00. Review recommended — printed menu may be stale.",
+      "itemName": "Coral Burger",
+      "expected": "$22.00",
+      "observed": "$19.00"
+    },
+    {
+      "id": "fnd_ac_service",
+      "comparison": "A_vs_C",
+      "severity": "difference",
+      "title": "No matching disclosure found for bill fee",
+      "detail": "Receipt includes an 18% service charge. Published menu discloses a 3% operations charge only. Review recommended.",
+      "itemName": "Service charge",
+      "expected": "3% operations charge",
+      "observed": "18% service charge"
+    },
+    {
+      "id": "fnd_bc_burger",
+      "comparison": "B_vs_C",
+      "severity": "review",
+      "title": "Potential discrepancy between table menu and bill",
+      "detail": "Physical menu listed Coral Burger at $19.00; receipt billed $22.00.",
+      "itemName": "Coral Burger",
+      "expected": "$19.00 (physical menu)",
+      "observed": "$22.00 (receipt)"
+    },
+    {
+      "id": "fnd_tax_lines",
+      "comparison": "receipt_layout",
+      "severity": "info",
+      "title": "Sales tax on a separate receipt line",
+      "detail": "Receipt shows sales tax on its own line, which matches the expected layout check.",
+      "passes": true
+    }
+  ],
+  "matchRate": 0.4,
+  "disclaimer": "FeeSeal identifies observable differences between documents. It does not determine legal liability or provide legal advice."
+}
