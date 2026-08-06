@@ -1,0 +1,51 @@
+{
+  "restaurantId": "rst_miami_coral",
+  "restaurantName": "Coral & Key",
+  "version": 1,
+  "effectiveFrom": "2026-08-01T12:00:00.000Z",
+  "jurisdiction": "US-FL",
+  "currency": "USD",
+  "items": [
+    {
+      "id": "itm_mojito",
+      "section": "Cocktails",
+      "name": "Classic Mojito",
+      "priceCents": 1400,
+      "dietaryTags": ["vegetarian"]
+    },
+    {
+      "id": "itm_ceviche",
+      "section": "Starters",
+      "name": "Snapper Ceviche",
+      "priceCents": 1800,
+      "dietaryTags": ["gluten_free"]
+    },
+    {
+      "id": "itm_burger",
+      "section": "Mains",
+      "name": "Coral Burger",
+      "priceCents": 2200
+    },
+    {
+      "id": "itm_grouper",
+      "section": "Mains",
+      "name": "Grilled Grouper",
+      "priceCents": 3200,
+      "dietaryTags": ["gluten_free"]
+    },
+    {
+      "id": "itm_flan",
+      "section": "Dessert",
+      "name": "Cuban Flan",
+      "priceCents": 1100,
+      "dietaryTags": ["vegetarian"]
+    }
+  ],
+  "feeDisclosures": [
+    {
+      "kind": "operations_charge",
+      "amountOrRate": "3%",
+      "purpose": "Kitchen and hospitality operations"
+    }
+  ]
+}

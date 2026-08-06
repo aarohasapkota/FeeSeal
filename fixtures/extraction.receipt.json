@@ -1,0 +1,23 @@
+{
+  "source": "receipt",
+  "lines": [
+    { "name": "Classic Mojito", "priceCents": 1400, "confidence": 0.95 },
+    { "name": "Coral Burger", "priceCents": 2200, "confidence": 0.92 },
+    { "name": "Cuban Flan", "priceCents": 1100, "confidence": 0.9 }
+  ],
+  "fees": [
+    {
+      "label": "Service charge",
+      "amountOrRate": "18%",
+      "purpose": ""
+    },
+    {
+      "label": "Sales tax",
+      "amountOrRate": "7%"
+    }
+  ],
+  "gratuitySeparate": false,
+  "taxSeparate": true,
+  "operationsChargeSeparate": false,
+  "isPrixFixe": false
+}

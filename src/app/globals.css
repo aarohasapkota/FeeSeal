@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  /* FeeSeal PRD tokens */
+  --ink: #0f172a;
+  --surface: #f8fafc;
+  --accent: #0f766e;
+  --verified: #15803d;
+  --review: #b45309;
+  --difference: #b91c1c;
+  --background: var(--surface);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-verified: var(--verified);
+  --color-review: var(--review);
+  --color-difference: var(--difference);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+}

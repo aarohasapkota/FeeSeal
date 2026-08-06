@@ -1,0 +1,17 @@
+{
+  "source": "physical_menu",
+  "lines": [
+    { "name": "Classic Mojito", "priceCents": 1400, "confidence": 0.94 },
+    { "name": "Snapper Ceviche", "priceCents": 1800, "confidence": 0.91 },
+    { "name": "Coral Burger", "priceCents": 1900, "confidence": 0.88 },
+    { "name": "Grilled Grouper", "priceCents": 3200, "confidence": 0.93 },
+    { "name": "Cuban Flan", "priceCents": 1100, "confidence": 0.9 }
+  ],
+  "fees": [
+    {
+      "label": "Operations charge",
+      "amountOrRate": "3%",
+      "purpose": "Kitchen and hospitality operations"
+    }
+  ]
+}
