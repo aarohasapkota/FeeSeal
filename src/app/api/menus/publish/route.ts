@@ -76,7 +76,7 @@ export async function POST(request: Request) {
     explorerUrl: memo.explorerUrl,
     status: memo.status === "confirmed" ? "confirmed" : "failed",
     restaurantId: menu.restaurantId,
-    publicPath: `/m/${menu.restaurantId}`,
+    publicPath: `/menu/${menu.restaurantId}`,
     cluster: memo.cluster,
   };
 

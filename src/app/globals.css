@@ -23,24 +23,106 @@
   --color-difference: var(--difference);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-menu: var(--font-menu-serif);
+}
+
+.menu-sheet {
+  font-family: var(--font-menu-serif), "Times New Roman", Times, serif;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  box-shadow:
+    0 1px 0 rgb(15 23 42 / 0.04),
+    0 18px 40px rgb(15 23 42 / 0.12);
+}
+
+.menu-sheet-scroll {
+  overflow: visible;
+  height: auto;
+  min-height: 0;
+}
+
+.menu-item-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(1rem, 1fr) auto;
+  align-items: end;
+  gap: 0.35rem;
+}
+
+.menu-item-dots {
+  border-bottom: 1px dotted rgb(15 23 42 / 0.35);
+  margin-bottom: 0.35rem;
+  min-width: 0.75rem;
+}
+
+.menu-viewer-stage {
+  background:
+    radial-gradient(ellipse at center, rgb(15 23 42 / 0.04), transparent 65%),
+    linear-gradient(180deg, #e8eef3 0%, #d9e2ea 100%);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(
+      1200px 600px at 10% -10%,
+      rgb(15 118 110 / 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 500px at 100% 0%,
+      rgb(15 23 42 / 0.04),
+      transparent 50%
+    ),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
 }
 
 .font-menu {
-  font-family: var(--font-menu), ui-serif, Georgia, serif;
+  font-family: var(--font-menu-serif), ui-serif, Georgia, serif;
+}
+
+@keyframes feeseal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes feeseal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-rise {
+  animation: feeseal-rise 0.55s ease-out both;
+}
+
+.animate-fade {
+  animation: feeseal-fade 0.7s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: feeseal-rise 0.55s ease-out 0.12s both;
+}
+
+.animate-rise-delay-2 {
+  animation: feeseal-rise 0.55s ease-out 0.24s both;
 }
 
 @media print {
   body {
     background: white;
   }
-  .menu-paper {
+  .menu-paper,
+  .menu-sheet {
     box-shadow: none !important;
     max-width: none !important;
   }

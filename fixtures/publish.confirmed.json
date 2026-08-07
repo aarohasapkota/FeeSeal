@@ -3,5 +3,8 @@
   "version": 1,
   "signature": "5VERv8aXaHbK2nL9pQ3sT6uW1yZ4bC7dE0fG3hJ6kM9nP2qR5sT8uV1wX4yZ7aB",
   "explorerUrl": "https://explorer.solana.com/tx/5VERv8aXaHbK2nL9pQ3sT6uW1yZ4bC7dE0fG3hJ6kM9nP2qR5sT8uV1wX4yZ7aB?cluster=devnet",
-  "status": "confirmed"
+  "status": "confirmed",
+  "restaurantId": "rst_miami_coral",
+  "publicPath": "/menu/rst_miami_coral",
+  "cluster": "stub"
 }
