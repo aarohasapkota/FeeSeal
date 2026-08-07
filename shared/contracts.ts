@@ -87,6 +87,8 @@ export type MenuExtractResult = {
   source: "vision" | "fixture";
 };
 
+export type SealCluster = "devnet" | "stub";
+
 export type PublishResult = {
   menuHash: string;
   version: number;
@@ -95,6 +97,51 @@ export type PublishResult = {
   status: "confirmed" | "pending" | "failed";
   restaurantId: string;
   publicPath: string;
+  /** stub = local fake seal when QuickNode/signer env missing */
+  cluster: SealCluster;
+};
+
+/**
+ * Diner evidence seal — fingerprints only on-chain (not the image).
+ * fileHash = SHA-256 of the captured image bytes
+ * analysisHash = SHA-256 of customer-confirmed extraction JSON
+ */
+export type EvidenceSource = "physical_menu" | "receipt";
+
+export type EvidenceSealRequest = {
+  restaurantId: string;
+  source: EvidenceSource;
+  /** SHA-256 hex of image bytes; optional if multipart file provided */
+  fileHash?: string;
+  /** Customer-confirmed extraction / structured analysis */
+  analysis: ExtractionDraft | Record<string, unknown>;
+  /** Optional client-supplied record id; server mints FS-… if omitted */
+  recordId?: string;
+};
+
+export type EvidenceSealResult = {
+  recordId: string;
+  restaurantId: string;
+  source: EvidenceSource;
+  fileHash: string;
+  analysisHash: string;
+  signature: string;
+  explorerUrl: string;
+  status: "confirmed" | "pending" | "failed";
+  cluster: SealCluster;
+  sealedAt: string;
+};
+
+export type VerifyKind = "menu" | "evidence_file" | "evidence_analysis";
+
+export type VerifyRequest = {
+  kind?: VerifyKind;
+  restaurantId?: string;
+  recordId?: string;
+  /** Hash to check (menu hash, file hash, or analysis hash depending on kind) */
+  hash?: string;
+  /** Demo helper: force mismatch without supplying a wrong hash */
+  tampered?: boolean;
 };
 
 export type ExtractedLine = {
@@ -151,9 +198,15 @@ export type ComparisonResult = {
 
 export type VerifyResult = {
   ok: boolean;
+  kind: VerifyKind;
   expectedHash: string;
   actualHash: string;
+  /** True when expected hash matches the sealed fingerprint we stored (and stub/devnet memo). */
   onChainMatch: boolean;
+  recordId?: string;
+  signature?: string;
+  explorerUrl?: string;
+  cluster?: SealCluster;
 };
 
 export type PublicMenuResponse = {

@@ -1,8 +1,8 @@
-import publishFixture from "@fixtures/publish.confirmed.json";
 import type { CanonicalMenu, MenuTemplateId, PublishResult } from "@shared/contracts";
 import { MENU_TEMPLATE_IDS } from "@shared/contracts";
 import { hashCanonicalMenu } from "@/lib/hash";
 import { savePublishedMenu } from "@/lib/menu-store";
+import { publishMenuMemo } from "@/lib/solana";
 
 export const runtime = "nodejs";
 
@@ -54,26 +54,30 @@ export async function POST(request: Request) {
 
   const menuHash = hashCanonicalMenu(menu);
 
-  // Solana memo still stubbed — real signature later via lib/solana
-  const signature = publishFixture.signature;
-  const explorerUrl = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
+  const memo = await publishMenuMemo({
+    menuHash,
+    restaurantId: menu.restaurantId,
+    version: menu.version,
+  });
 
   savePublishedMenu({
     menu,
     menuHash,
-    signature,
-    explorerUrl,
-    verified: true,
+    signature: memo.signature,
+    explorerUrl: memo.explorerUrl,
+    verified: memo.status === "confirmed",
+    cluster: memo.cluster,
   });
 
   const result: PublishResult = {
     menuHash,
     version: menu.version,
-    signature,
-    explorerUrl,
-    status: "confirmed",
+    signature: memo.signature,
+    explorerUrl: memo.explorerUrl,
+    status: memo.status === "confirmed" ? "confirmed" : "failed",
     restaurantId: menu.restaurantId,
     publicPath: `/m/${menu.restaurantId}`,
+    cluster: memo.cluster,
   };
 
   return Response.json(result);

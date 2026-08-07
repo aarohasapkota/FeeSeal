@@ -1,6 +1,7 @@
-import findings from "@fixtures/findings.demo.json";
 import type { CompareRequest, ComparisonResult } from "@shared/contracts";
-import { FEESEAL_DISCLAIMER } from "@shared/contracts";
+import { compareSources } from "@/lib/compare";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   let body: CompareRequest;
@@ -18,11 +19,11 @@ export async function POST(request: Request) {
     );
   }
 
-  // Fixture stub — real deterministic compare lands in lib/compare
-  const result: ComparisonResult = {
-    ...(findings as ComparisonResult),
-    disclaimer: FEESEAL_DISCLAIMER,
-  };
+  const result: ComparisonResult = compareSources({
+    menu: body.menu,
+    physicalMenu: body.physicalMenu,
+    receipt: body.receipt,
+  });
 
   return Response.json(result);
 }

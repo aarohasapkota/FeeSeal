@@ -19,29 +19,37 @@ FeeSeal proves that the **published menu (A)**, the **physical menu photo (B)**,
 
 ### Backend ready for you (Aaroha) — wire your UI to these
 
-Restaurant publish (photo → extract → choose paper layout → seal):
+Restaurant publish (photo → extract → choose paper layout → seal Source A):
 
 | Method | Path | Notes |
 |---|---|---|
 | `POST` | `/api/menus/extract` | multipart field `image` → `MenuExtractResult` |
-| `POST` | `/api/menus/publish` | body `CanonicalMenu` (include `templateId`) → real SHA-256 + stub Solana |
+| `POST` | `/api/menus/publish` | body `CanonicalMenu` → SHA-256 + Solana Memo (`cluster: "devnet"` or `"stub"`) |
 | `GET` | `/api/restaurants/:id/menu` | public record; try `demo` |
 
-- Types: `shared/contracts.ts` — `MenuTemplateId`, `MenuExtractResult`, `MenuPublishDraft`, `CanonicalMenu.templateId`, `PublishResult`
-- Fixtures: `fixtures/menu.v1.json`, `fixtures/menu.extract.from_photo.json`
-- Paper layout ids (not DoorDash cards): `classic_single` \| `bistro_two_column` \| `evening_dense`
-- Optional reuse: `src/components/menu-templates/` renders those layouts from `CanonicalMenu` — restyle or rebuild; keep printed-page look
-- Temporary reference only: `/restaurant/publish` — do not treat as final product UI
+Diner evidence seal (integrity fingerprints — not the comparison itself):
+
+| Method | Path | Notes |
+|---|---|---|
+| `POST` | `/api/evidence/seal` | JSON or multipart: `restaurantId`, `source`, `analysis`, + `file`/`fileHash` → `fileHash` + `analysisHash` memo |
+| `GET` | `/api/evidence/:recordId` | lookup sealed evidence (`FS-…`) |
+| `POST` | `/api/verify` | `kind`: `menu` \| `evidence_file` \| `evidence_analysis`; pass `hash` / file or `tampered: true` for demo mismatch |
+
+- Types: `EvidenceSealRequest`, `EvidenceSealResult`, `VerifyResult`, `PublishResult.cluster`
+- Solana: Memo Program via QuickNode when `QUICKNODE_SOLANA_RPC` + `FEESEAL_SIGNER_SECRET` set; otherwise deterministic **stub** seal (demo still works)
+- On-chain = fingerprints only; full menu / photos stay off-chain
+- Paper layout ids: `classic_single` \| `bistro_two_column` \| `evening_dense`
+- Temporary reference only: `/restaurant/publish` — replace with your UX
 
 ### Screens you should build (demo order)
 
 1. **Landing** — two doors: diner / restaurant
 2. **Restaurant publish** — photo capture, editable extract, template picker, preview, publish confirmation (hash + explorer link)
 3. **Public menu page** — verified badge, version, fee disclosure, QR placeholder; paper-style page not a delivery feed
-4. **Scan capture** — framing/glare guidance (menu, then receipt)
+4. **Scan capture** — framing/glare guidance (menu, then receipt); call `POST /api/scans/extract`, then `POST /api/evidence/seal` after customer confirms extraction
 5. **Review extraction** — image beside **editable** extracted fields
-6. **Findings** — A / B / C columns, itemized diffs, one passing check, disclaimer
-7. **Verification** — original vs modified → match / mismatch
+6. **Findings** — call `POST /api/scans/compare` with A + edited B + edited C; show disclaimer from response
+7. **Verification** — `POST /api/verify` with `kind: evidence_file` (original vs modified image) or `menu`
 
 ### Look (from PRD — stick to this)
 

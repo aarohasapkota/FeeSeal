@@ -1,4 +1,4 @@
-import type { CanonicalMenu, PublicMenuResponse } from "@shared/contracts";
+import type { CanonicalMenu, PublicMenuResponse, SealCluster } from "@shared/contracts";
 
 export type StoredMenuRecord = {
   menu: CanonicalMenu;
@@ -6,6 +6,7 @@ export type StoredMenuRecord = {
   signature: string;
   explorerUrl: string;
   verified: boolean;
+  cluster: SealCluster;
 };
 
 const globalStore = globalThis as typeof globalThis & {
