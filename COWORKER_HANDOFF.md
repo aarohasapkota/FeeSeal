@@ -1,6 +1,16 @@
 # FeeSeal — Coworker Handoff (Diego / UI)
 
-**Full-stack on `aaroha/backend`:** Diego’s UI is merged here. Ship from this branch; `diego/ui` is historical.
+**Full-stack on `aaroha/backend`:** Diego’s UI is merged here. Ship from this branch.
+
+**Run locally on port 8080:**
+
+```bash
+git checkout aaroha/backend && git pull
+npm install
+npm run dev
+```
+
+Open http://localhost:8080
 
 **Style:** follow [CODING_STANDARDS.md](./CODING_STANDARDS.md) (Doug Lea–style rules adapted for TypeScript / Next.js / React).
 
