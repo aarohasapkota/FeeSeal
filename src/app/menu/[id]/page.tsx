@@ -91,6 +91,7 @@ export default function PublicMenuPage() {
         menu={menu}
         verified={data.verified}
         updatedLabel={updated}
+        proofHref={data.explorerUrl ?? "/diner/verify"}
       />
     </div>
   );

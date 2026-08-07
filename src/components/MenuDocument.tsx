@@ -158,6 +158,7 @@ export function MenuSheet({
   version,
   updatedLabel,
   layout = "letter",
+  proofHref,
 }: {
   menu: CanonicalMenu;
   page: MenuPageModel;
@@ -167,8 +168,11 @@ export function MenuSheet({
   version: number;
   updatedLabel: string;
   layout?: MenuSheetLayout;
+  /** Link to the sealed on-chain / integrity proof for this menu. */
+  proofHref?: string;
 }) {
   const isScroll = layout === "scroll";
+  const sealedProofHref = proofHref ?? "/diner/verify";
 
   return (
     <article
@@ -236,23 +240,23 @@ export function MenuSheet({
 
       {page.showFooter ? (
         <footer className="mt-8 flex items-end justify-between gap-4 border-t border-ink/10 pt-4 sm:mt-6">
-          <div className="flex min-w-0 items-end gap-3">
-            <div
-              className="flex h-14 w-14 shrink-0 items-center justify-center border border-ink/20"
-              aria-hidden
-            >
-              <div className="grid h-10 w-10 grid-cols-5 gap-px opacity-50">
-                {Array.from({ length: 25 }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={`bg-ink ${i % 3 === 0 || i % 7 === 0 ? "opacity-100" : "opacity-25"}`}
-                  />
-                ))}
-              </div>
-            </div>
-            <p className="min-w-0 font-sans text-[0.7rem] leading-snug text-ink/50 sm:max-w-[10rem] sm:text-[0.65rem]">
-              Scan for the sealed digital record of this menu.
+          <div className="min-w-0">
+            <p className="font-sans text-[0.65rem] uppercase tracking-[0.16em] text-ink/40">
+              FeeSeal sealed record
             </p>
+            <a
+              href={sealedProofHref}
+              target={sealedProofHref.startsWith("http") ? "_blank" : undefined}
+              rel={
+                sealedProofHref.startsWith("http")
+                  ? "noopener noreferrer"
+                  : undefined
+              }
+              className="mt-1 inline-flex items-center gap-1 font-sans text-[0.85rem] font-semibold text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+            >
+              View the proof of this menu
+              <span aria-hidden>→</span>
+            </a>
           </div>
           {!isScroll && totalPages > 1 ? (
             <p className="shrink-0 font-sans text-[0.65rem] tabular-nums text-ink/40">

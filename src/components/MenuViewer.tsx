@@ -14,6 +14,7 @@ type MenuViewerProps = {
   menu: CanonicalMenu;
   verified: boolean;
   updatedLabel: string;
+  proofHref?: string;
 };
 
 function densityFromWidth(width: number): MenuPageDensity {
@@ -22,7 +23,12 @@ function densityFromWidth(width: number): MenuPageDensity {
   return "phone";
 }
 
-export function MenuViewer({ menu, verified, updatedLabel }: MenuViewerProps) {
+export function MenuViewer({
+  menu,
+  verified,
+  updatedLabel,
+  proofHref,
+}: MenuViewerProps) {
   const [zoomIndex, setZoomIndex] = useState(2); // 100%
   const [density, setDensity] = useState<MenuPageDensity>("phone");
   const stageRef = useRef<HTMLDivElement>(null);
@@ -135,6 +141,7 @@ export function MenuViewer({ menu, verified, updatedLabel }: MenuViewerProps) {
                     version={menu.version}
                     updatedLabel={updatedLabel}
                     layout="letter"
+                    proofHref={proofHref}
                   />
                 </div>
               ))}
@@ -160,6 +167,7 @@ export function MenuViewer({ menu, verified, updatedLabel }: MenuViewerProps) {
               version={menu.version}
               updatedLabel={updatedLabel}
               layout="scroll"
+              proofHref={proofHref}
             />
           </div>
         </div>
