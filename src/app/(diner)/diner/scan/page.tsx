@@ -87,6 +87,7 @@ export default function ScanCapturePage() {
         comparison: null,
       });
       setLocalPreview(null);
+      router.push("/diner/review?source=physical_menu");
     } else {
       saveDemoState({
         receipt: draft,
@@ -94,7 +95,7 @@ export default function ScanCapturePage() {
         scanStep: "receipt",
         comparison: null,
       });
-      router.push("/diner/review?source=physical_menu");
+      router.push("/diner/review?source=receipt");
     }
   }
 
@@ -117,13 +118,14 @@ export default function ScanCapturePage() {
         comparison: null,
       });
       setLocalPreview(null);
+      router.push("/diner/review?source=physical_menu");
     } else {
       saveDemoState({
         receipt: draft,
         receiptImageDataUrl: placeholder,
         comparison: null,
       });
-      router.push("/diner/review?source=physical_menu");
+      router.push("/diner/review?source=receipt");
     }
   }
 

@@ -43,6 +43,10 @@ const empty: DemoState = {
 
 const listeners = new Set<() => void>();
 
+/** Cached snapshot — must be referentially stable when data is unchanged. */
+let cachedRaw: string | null = null;
+let cachedState: DemoState = empty;
+
 function emit() {
   for (const listener of listeners) listener();
 }
@@ -51,38 +55,68 @@ function canUseStorage(): boolean {
   return typeof window !== "undefined" && !!window.sessionStorage;
 }
 
-export function loadDemoState(): DemoState {
-  if (!canUseStorage()) return { ...empty };
+function parseState(raw: string | null): DemoState {
+  if (!raw) return empty;
   try {
-    const raw = sessionStorage.getItem(KEY);
-    if (!raw) return { ...empty };
     return { ...empty, ...(JSON.parse(raw) as Partial<DemoState>) };
   } catch {
-    return { ...empty };
+    return empty;
   }
+}
+
+/**
+ * Stable getSnapshot for useSyncExternalStore.
+ * Returns the same object reference unless sessionStorage content changed.
+ */
+export function loadDemoState(): DemoState {
+  if (!canUseStorage()) return cachedState === empty ? empty : cachedState;
+
+  let raw: string | null;
+  try {
+    raw = sessionStorage.getItem(KEY);
+  } catch {
+    return cachedState;
+  }
+
+  if (raw === cachedRaw) return cachedState;
+
+  cachedRaw = raw;
+  cachedState = parseState(raw);
+  return cachedState;
 }
 
 export function saveDemoState(patch: Partial<DemoState>): DemoState {
   const next = { ...loadDemoState(), ...patch };
+  const raw = JSON.stringify(next);
   if (canUseStorage()) {
-    sessionStorage.setItem(KEY, JSON.stringify(next));
+    sessionStorage.setItem(KEY, raw);
   }
+  cachedRaw = raw;
+  cachedState = next;
   emit();
   return next;
 }
 
 export function clearDemoState(): void {
   if (canUseStorage()) sessionStorage.removeItem(KEY);
+  cachedRaw = null;
+  cachedState = empty;
   emit();
 }
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getServerSnapshot(): DemoState {
+  return empty;
 }
 
 export function useDemoState(): DemoState {
-  return useSyncExternalStore(subscribe, loadDemoState, () => empty);
+  return useSyncExternalStore(subscribe, loadDemoState, getServerSnapshot);
 }
 
 export function useSaveDemoState() {

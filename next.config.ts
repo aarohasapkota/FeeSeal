@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Cloudflare tunnel / custom hostname in `next dev`
+  allowedDevOrigins: ["fees.fuegowork.dev", "*.fuegowork.dev"],
 };
 
 export default nextConfig;

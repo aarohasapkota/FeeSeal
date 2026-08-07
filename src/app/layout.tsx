@@ -29,8 +29,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${menuSerif.variable} h-full antialiased`}
+      // Tunnel / remote-browser tooling injects attrs (e.g. __gcrremoteframetoken)
+      // onto <html> before hydrate — suppress the benign mismatch warning.
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

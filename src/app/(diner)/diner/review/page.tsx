@@ -62,13 +62,27 @@ function ReviewInner() {
   ): Promise<string | null> {
     try {
       const form = new FormData();
-      form.set("restaurantId", demo.restaurantId || "rst_miami_coral");
+      form.set(
+        "restaurantId",
+        demo.menu?.restaurantId ||
+          (demo.restaurantId !== "demo" ? demo.restaurantId : "") ||
+          "rst_miami_coral",
+      );
       form.set("source", sealSource);
       form.set("analysis", JSON.stringify(sealedDraft));
+      let attachedFile = false;
       if (imageDataUrl?.startsWith("data:")) {
-        const blob = await (await fetch(imageDataUrl)).blob();
-        form.set("file", blob, `${sealSource}.jpg`);
-      } else {
+        try {
+          const blob = await (await fetch(imageDataUrl)).blob();
+          if (blob.size > 0) {
+            form.set("file", blob, `${sealSource}.bin`);
+            attachedFile = true;
+          }
+        } catch {
+          // fall through to placeholder hash
+        }
+      }
+      if (!attachedFile) {
         form.set(
           "fileHash",
           sealSource === "physical_menu"
@@ -98,9 +112,11 @@ function ReviewInner() {
       saveDemoState({
         physicalMenu: confirmedDraft,
         menuEvidenceId: recordId,
+        scanStep: "receipt",
       });
       setOverride(null);
-      router.push("/diner/review?source=receipt");
+      // Capture receipt next, then review C
+      router.push("/diner/scan");
     } else {
       const recordId = await sealEvidence(
         "receipt",
@@ -159,7 +175,7 @@ function ReviewInner() {
             className="flex-1 rounded-md bg-accent px-5 py-3.5 font-medium text-white hover:bg-accent/90"
           >
             {source === "physical_menu"
-              ? "Confirm menu · review receipt"
+              ? "Confirm menu · scan receipt"
               : "Confirm receipt · compare"}
           </button>
         </div>
